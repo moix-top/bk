@@ -28,7 +28,7 @@ export default async function Home({ searchParams }: { searchParams: { q?: strin
             <Link href={`/libro/${b.id}`} className="card">
               <span className="title">{b.title}</span>
               {b.author && <span className="sub">{b.author}</span>}
-              {b.summary && <span className="excerpt">{b.summary}</span>}
+              {b.summary && <span className="excerpt">{plain(b.summary)}</span>}
               {b.finishedAt && <span className="sub date">{fmt(b.finishedAt)}</span>}
             </Link>
           </li>
@@ -40,3 +40,11 @@ export default async function Home({ searchParams }: { searchParams: { q?: strin
 
 const fmt = (d: string) =>
   new Date(`${d}T12:00:00`).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" });
+
+// Extracto de la tarjeta: sin sintaxis Markdown.
+const plain = (md: string) =>
+  md
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/^#+\s*/gm, "")
+    .replace(/^\s*([-*+]|\d+\.)\s+/gm, "")
+    .replace(/[*_`>~]/g, "");

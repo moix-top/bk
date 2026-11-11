@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/auth";
 import { getBook } from "@/lib/services/bookService";
@@ -39,7 +41,14 @@ function Section({ title, text }: { title: string; text: string }) {
   return (
     <section>
       <h3>{title}</h3>
-      <p className="prose">{text}</p>
+      <div className="prose">
+        <Markdown
+          remarkPlugins={[remarkGfm]}
+          components={{ a: (p) => <a {...p} target="_blank" rel="noopener noreferrer" /> }}
+        >
+          {text}
+        </Markdown>
+      </div>
     </section>
   );
 }

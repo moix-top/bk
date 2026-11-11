@@ -76,7 +76,18 @@ textarea { resize: vertical; }
 
 .book h2 { font-size: 1.8rem; margin: 16px 0 2px; letter-spacing: -0.02em; }
 .book h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 28px 0 6px; }
-.prose { white-space: pre-wrap; margin: 0; }
+.prose > :first-child { margin-top: 0; }
+.prose > :last-child { margin-bottom: 0; }
+.prose p, .prose ul, .prose ol, .prose blockquote, .prose table { margin: 0 0 12px; }
+.prose ul, .prose ol { padding-left: 1.4em; }
+.prose li { margin: 4px 0; }
+.prose li > p { margin: 0; }
+.prose h1, .prose h2, .prose h3, .prose h4 { font-size: 1.05rem; text-transform: none; letter-spacing: 0; color: var(--text); margin: 18px 0 6px; }
+.prose a { color: var(--accent); }
+.prose blockquote { border-left: 3px solid var(--accent); padding-left: 12px; color: var(--muted); }
+.prose code { background: var(--page); padding: 1px 5px; border-radius: 5px; }
+.prose table { border-collapse: collapse; display: block; overflow-x: auto; }
+.prose th, .prose td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
 .repo { color: var(--accent); overflow-wrap: anywhere; }
 
 :focus { outline: none; }

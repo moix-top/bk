@@ -20,7 +20,7 @@ export default function BookForm({ book }: { book?: Book }) {
         <label>Terminado el<input type="date" name="finishedAt" defaultValue={book?.finishedAt} /></label>
       </div>
       <label>Repo de git<input name="repo" type="text" inputMode="url" placeholder="https://github.com/usuario/libro" defaultValue={book?.repo} /></label>
-      <label>Resumen breve <span className="hint">de qué iba</span><textarea name="summary" rows={5} defaultValue={book?.summary} /></label>
+      <label>Resumen breve <span className="hint">de qué iba · admite Markdown</span><textarea name="summary" rows={5} defaultValue={book?.summary} /></label>
       <label>Lo más importante<textarea name="highlights" rows={5} defaultValue={book?.highlights} /></label>
       <label>Lo que me aportó<textarea name="takeaways" rows={5} defaultValue={book?.takeaways} /></label>
       {state.error && <p className="error">{state.error}</p>}
