@@ -1,0 +1,94 @@
+:root {
+  --page: #f7f4ef;
+  --surface: #ffffff;
+  --text: #1b1714;
+  --muted: #6f665d;
+  --border: rgba(27, 23, 20, 0.12);
+  --accent: #b8681f;
+  --danger: #b83a3a;
+  --tap: 44px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #14110f;
+    --surface: #1f1b18;
+    --text: #f3ede6;
+    --muted: #a99f94;
+    --border: rgba(255, 255, 255, 0.12);
+    --accent: #e8a04a;
+    --danger: #e46b6b;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--page); color: var(--text); }
+body { font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: inherit; }
+button, input, textarea { font: inherit; color: inherit; }
+
+.shell { max-width: 1100px; margin: 0 auto; padding: 16px 16px calc(40px + env(safe-area-inset-bottom)); }
+.narrow { max-width: 720px; }
+.top { display: flex; justify-content: space-between; align-items: center; min-height: var(--tap); }
+.top h1 { margin: 0; font-size: 1.5rem; letter-spacing: -0.02em; }
+.brand { text-decoration: none; }
+.link-muted { color: var(--muted); text-decoration: none; }
+.plain { background: none; border: 0; }
+.muted, .sub, .hint { color: var(--muted); }
+.sub { font-size: 0.9rem; }
+.hint { font-weight: 400; font-size: 0.85rem; }
+.error { color: var(--danger); }
+.login { text-align: center; padding-top: 20vh; max-width: 480px; }
+
+button, .btn {
+  min-height: var(--tap); padding: 0 16px; border-radius: 10px; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--border); text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;
+}
+.btn { background: var(--accent); color: #fff; border-color: transparent; font-weight: 600; }
+button.danger { color: var(--danger); }
+button:disabled { opacity: 0.6; }
+
+input, textarea {
+  width: 100%; min-height: var(--tap); padding: 10px 12px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+}
+textarea { resize: vertical; }
+
+.bar-row { display: flex; gap: 8px; margin: 12px 0 4px; }
+.search { flex: 1; min-width: 0; }
+.empty { padding: 40px 0; text-align: center; color: var(--muted); }
+
+.grid { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.card {
+  display: flex; flex-direction: column; gap: 4px; height: 100%; padding: 16px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px; text-decoration: none;
+  transition: border-color 0.15s;
+}
+.card:hover { border-color: var(--accent); }
+.title { font-weight: 700; font-size: 1.05rem; }
+.excerpt { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.92rem; margin-top: 4px; }
+.date { margin-top: auto; padding-top: 8px; font-size: 0.8rem; }
+
+.form { display: grid; gap: 14px; }
+.form label { display: grid; gap: 6px; font-weight: 600; font-size: 0.92rem; }
+.two { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 560px) { .two { grid-template-columns: 1fr; } }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+.book h2 { font-size: 1.8rem; margin: 16px 0 2px; letter-spacing: -0.02em; }
+.book h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 28px 0 6px; }
+.prose { white-space: pre-wrap; margin: 0; }
+.repo { color: var(--accent); overflow-wrap: anywhere; }
+
+:focus { outline: none; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.nav { display: flex; align-items: center; gap: 16px; }
+.section-title { margin-top: 32px; }
+.panel { background: var(--surface); border: 1px solid var(--accent); border-radius: 12px; padding: 14px; margin: 12px 0; }
+.snippet { margin-top: 12px; }
+.snippet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.snippet-head button { min-height: 32px; font-size: 0.85rem; }
+pre { margin: 0; padding: 12px; background: var(--page); border-radius: 8px; overflow-x: auto; font-size: 0.82rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+code { font-size: 0.9em; overflow-wrap: anywhere; }
+.tokens { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.tokens li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }

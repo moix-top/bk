@@ -1,0 +1,45 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { requireSession } from "@/lib/auth";
+import { getBook } from "@/lib/services/bookService";
+import Header from "../../Header";
+import { removeBook } from "../../actions";
+
+export default async function BookPage({ params }: { params: { id: string } }) {
+  const { userId } = await requireSession();
+  const b = await getBook(userId, params.id);
+  if (!b) notFound();
+
+  return (
+    <main className="shell narrow">
+      <Header />
+      <article className="book">
+        <h2>{b.title}</h2>
+        <p className="sub">
+          {[b.author, b.finishedAt && `terminado el ${new Date(`${b.finishedAt}T12:00:00`).toLocaleDateString("es-ES", { dateStyle: "long" })}`].filter(Boolean).join(" · ")}
+        </p>
+        {b.repo && <p><a href={b.repo} target="_blank" rel="noopener noreferrer" className="repo">{b.repo.replace(/^https?:\/\//, "")} ↗</a></p>}
+        <Section title="De qué iba" text={b.summary} />
+        <Section title="Lo más importante" text={b.highlights} />
+        <Section title="Lo que me aportó" text={b.takeaways} />
+      </article>
+      <div className="actions">
+        <Link href={`/libro/${b.id}/editar`} className="btn">Editar</Link>
+        <form action={removeBook}>
+          <input type="hidden" name="id" value={b.id} />
+          <button type="submit" className="danger">Borrar</button>
+        </form>
+      </div>
+    </main>
+  );
+}
+
+function Section({ title, text }: { title: string; text: string }) {
+  if (!text) return null;
+  return (
+    <section>
+      <h3>{title}</h3>
+      <p className="prose">{text}</p>
+    </section>
+  );
+}
