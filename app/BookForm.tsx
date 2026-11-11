@@ -15,7 +15,10 @@ export default function BookForm({ book }: { book?: Book }) {
     <form action={action} className="form">
       {book && <input type="hidden" name="id" value={book.id} />}
       <label>Título<input name="title" required defaultValue={book?.title} autoFocus={!book} /></label>
-      <label>Autor<input name="author" defaultValue={book?.author} /></label>
+      <div className="two">
+        <label>Autor<input name="author" defaultValue={book?.author} /></label>
+        <label>Año de publicación<input name="publishedYear" inputMode="numeric" placeholder="1943" maxLength={5} defaultValue={book?.publishedYear} /></label>
+      </div>
       <div className="two">
         <label>Empezado el<input type="date" name="startedAt" defaultValue={book?.startedAt} /></label>
         <label>Terminado el<input type="date" name="finishedAt" defaultValue={book?.finishedAt} /></label>

@@ -18,7 +18,7 @@ export default async function BookPage({ params }: { params: { id: string } }) {
       <article className="book">
         <h2>{b.title}</h2>
         <p className="sub">
-          {[b.author, readingSpan(b.startedAt, b.finishedAt)].filter(Boolean).join(" · ")}
+          {[b.author, b.publishedYear && `publicado en ${b.publishedYear}`, readingSpan(b.startedAt, b.finishedAt)].filter(Boolean).join(" · ")}
         </p>
         {b.repo && <p><a href={b.repo} target="_blank" rel="noopener noreferrer" className="repo">{b.repo.replace(/^https?:\/\//, "")} ↗</a></p>}
         <Section title="De qué iba" text={b.summary} />

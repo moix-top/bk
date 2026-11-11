@@ -10,6 +10,7 @@ const LIMITS: Record<keyof BookInput, number> = {
   title: 300,
   author: 200,
   repo: 500,
+  publishedYear: 5,
   startedAt: 10,
   finishedAt: 10,
   summary: 20000,
@@ -34,6 +35,7 @@ export function parseBookInput(raw: Record<string, unknown>): BookInput {
       throw httpError(400, "El repo no es una URL válida");
     }
   }
+  if (out.publishedYear && !/^-?\d{1,4}$/.test(out.publishedYear)) throw httpError(400, "Año de publicación no válido");
   for (const k of ["startedAt", "finishedAt"] as const) {
     if (out[k] && !/^\d{4}-\d{2}-\d{2}$/.test(out[k])) throw httpError(400, "Fecha no válida");
   }
@@ -45,7 +47,7 @@ export function parseBookInput(raw: Record<string, unknown>): BookInput {
 
 function toBook(item: Record<string, unknown>): Book {
   const { pk: _pk, sk: _sk, ...rest } = item;
-  return { startedAt: "", ...rest } as unknown as Book;
+  return { startedAt: "", publishedYear: "", ...rest } as unknown as Book;
 }
 
 export async function listBooks(userId: string): Promise<Book[]> {

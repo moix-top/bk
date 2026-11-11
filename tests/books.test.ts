@@ -12,6 +12,8 @@ describe("bookService", () => {
     expect(input().repo).toBe("https://github.com/radamuz/el-principito");
     expect(() => parseBookInput({ title: "  " })).toThrow();
     expect(() => input({ finishedAt: "ayer" })).toThrow();
+    expect(() => input({ publishedYear: "mil" })).toThrow();
+    expect(input({ publishedYear: "1943" }).publishedYear).toBe("1943");
     expect(() => input({ startedAt: "2026-10-30", finishedAt: "2026-10-29" })).toThrow();
     expect(input({ startedAt: "2026-10-25", finishedAt: "2026-10-29" }).startedAt).toBe("2026-10-25");
   });
