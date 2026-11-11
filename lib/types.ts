@@ -4,6 +4,8 @@ export interface Book {
   author: string;
   /** Repo de git con los apuntes (p. ej. https://github.com/radamuz/el-principito). */
   repo: string;
+  /** Fecha en que lo empecé (YYYY-MM-DD), opcional. */
+  startedAt: string;
   /** Fecha en que lo terminé (YYYY-MM-DD), opcional. */
   finishedAt: string;
   /** Resumen breve: de qué iba. */
@@ -16,4 +18,4 @@ export interface Book {
   updatedAt: string;
 }
 
-export type BookInput = Pick<Book, "title" | "author" | "repo" | "finishedAt" | "summary" | "highlights" | "takeaways">;
+export type BookInput = Pick<Book, "title" | "author" | "repo" | "startedAt" | "finishedAt" | "summary" | "highlights" | "takeaways">;

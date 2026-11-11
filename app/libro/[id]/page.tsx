@@ -18,7 +18,7 @@ export default async function BookPage({ params }: { params: { id: string } }) {
       <article className="book">
         <h2>{b.title}</h2>
         <p className="sub">
-          {[b.author, b.finishedAt && `terminado el ${new Date(`${b.finishedAt}T12:00:00`).toLocaleDateString("es-ES", { dateStyle: "long" })}`].filter(Boolean).join(" · ")}
+          {[b.author, readingSpan(b.startedAt, b.finishedAt)].filter(Boolean).join(" · ")}
         </p>
         {b.repo && <p><a href={b.repo} target="_blank" rel="noopener noreferrer" className="repo">{b.repo.replace(/^https?:\/\//, "")} ↗</a></p>}
         <Section title="De qué iba" text={b.summary} />
@@ -51,4 +51,17 @@ function Section({ title, text }: { title: string; text: string }) {
       </div>
     </section>
   );
+}
+
+const day = (d: string) => new Date(`${d}T12:00:00`);
+const long = (d: string) => day(d).toLocaleDateString("es-ES", { dateStyle: "long" });
+
+function readingSpan(start: string, end: string): string {
+  if (start && end) {
+    const days = Math.round((day(end).getTime() - day(start).getTime()) / 86400000) + 1;
+    return `leído del ${long(start)} al ${long(end)} (${days} ${days === 1 ? "día" : "días"})`;
+  }
+  if (end) return `terminado el ${long(end)}`;
+  if (start) return `empezado el ${long(start)}`;
+  return "";
 }

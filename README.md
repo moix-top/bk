@@ -1,6 +1,6 @@
 # bk · bk.moix.top
 
-Registro de los libros que he leído: **título**, **autor**, **repo de git** con los
+Registro de los libros que he leído: **título**, **autor**, **fechas de comienzo y fin**, **repo de git** con los
 apuntes (p. ej. [el-principito](https://github.com/radamuz/el-principito)), **resumen
 breve**, **lo más importante** y **lo que me aportó**.
 
