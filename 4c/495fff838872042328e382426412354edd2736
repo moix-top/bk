@@ -1,0 +1,21 @@
+app/globals.css
+  s_dd084bf0853d43::t_f82138aeeff14b 175-179
+app/page.tsx
+  s_dd084bf0853d43::t_f82138aeeff14b 4,14-16,30,32-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4c495fff838872042328e382426412354edd2736",
+  "prompts": {},
+  "sessions": {
+    "s_dd084bf0853d43": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "76e2c846-cace-49a6-9afb-0f147516b239",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Raul Adamuz <radamuzc@gmail.com>"
+    }
+  }
+}
