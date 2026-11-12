@@ -21,6 +21,7 @@ export default async function BookPage({ params }: { params: { id: string } }) {
       <article className="book">
         <header className="book-head">
           <h2>{b.title}</h2>
+          {b.originalTitle && b.originalTitle !== b.title && <p className="original"><em>{b.originalTitle}</em></p>}
           {b.author && <p className="byline">{b.author}</p>}
         </header>
         <Facts book={b} />

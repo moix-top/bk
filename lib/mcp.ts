@@ -9,13 +9,14 @@ import type { Book } from "@/lib/types";
 export const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 const SERVER_INFO = { name: "bk", title: "bk · libros leídos", version: "1.0.0" };
 
-const INSTRUCTIONS = `bk es el registro personal de libros leídos del usuario. Cada libro tiene: título, autor, año y editorial de la publicación original, editorial y año de la edición leída, repo de git con sus apuntes, fechas de comienzo y fin de lectura, un resumen breve (de qué iba), lo más importante del libro y lo que le aportó personalmente.
+const INSTRUCTIONS = `bk es el registro personal de libros leídos del usuario. Cada libro tiene: título y título original, autor, año y editorial de la publicación original, editorial y año de la edición leída, repo de git con sus apuntes, fechas de comienzo y fin de lectura, un resumen breve (de qué iba), lo más importante del libro y lo que le aportó personalmente.
 - Antes de añadir un libro, busca con search_books para no duplicarlo.
 - Escribe en español, con tildes, tono cercano. "takeaways" (lo que me aportó) va en primera persona: es la voz del usuario, no la tuya; si no te lo ha contado, pregúntaselo en lugar de inventarlo.
 - Si el usuario tiene un repo de apuntes del libro, úsalo como fuente para resumir.`;
 
 const bookFields = {
   title: { type: "string", description: "Título del libro" },
+  originalTitle: { type: "string", description: "Título original, si es distinto (p. ej. en su idioma original)" },
   author: { type: "string", description: "Autor o autores" },
   repo: { type: "string", description: "URL del repo de git con los apuntes del libro" },
   publishedYear: { type: "string", description: "Año de la publicación original, p. ej. 1943" },
@@ -86,10 +87,10 @@ interface RpcRequest { jsonrpc?: string; id?: string | number | null; method?: s
 
 const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 
-const brief = (b: Book) => ({ id: b.id, title: b.title, author: b.author, publishedYear: b.publishedYear, startedAt: b.startedAt, finishedAt: b.finishedAt, summary: b.summary.slice(0, 280) });
+const brief = (b: Book) => ({ id: b.id, title: b.title, originalTitle: b.originalTitle, author: b.author, publishedYear: b.publishedYear, startedAt: b.startedAt, finishedAt: b.finishedAt, summary: b.summary.slice(0, 280) });
 
 function asMarkdown(b: Book): string {
-  const lines = [`# ${b.title}`, [b.author, b.publishedYear && `publicado en ${b.publishedYear}`, b.originalPublisher && `por ${b.originalPublisher}`, b.startedAt && `empezado el ${b.startedAt}`, b.finishedAt && `terminado el ${b.finishedAt}`].filter(Boolean).join(" · ")];
+  const lines = [`# ${b.title}${b.originalTitle && b.originalTitle !== b.title ? ` (${b.originalTitle})` : ""}`, [b.author, b.publishedYear && `publicado en ${b.publishedYear}`, b.originalPublisher && `por ${b.originalPublisher}`, b.startedAt && `empezado el ${b.startedAt}`, b.finishedAt && `terminado el ${b.finishedAt}`].filter(Boolean).join(" · ")];
   const edition = [b.editionPublisher, b.editionYear].filter(Boolean).join(", ");
   if (edition) lines.push(`Edición leída: ${edition}`);
   if (b.repo) lines.push(`Repo: ${b.repo}`);

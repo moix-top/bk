@@ -1,6 +1,8 @@
 export interface Book {
   id: string;
   title: string;
+  /** Título original, si es distinto (p. ej. "Le Petit Prince"). */
+  originalTitle: string;
   author: string;
   /** Repo de git con los apuntes (p. ej. https://github.com/radamuz/el-principito). */
   repo: string;
@@ -28,4 +30,4 @@ export interface Book {
   updatedAt: string;
 }
 
-export type BookInput = Pick<Book, "title" | "author" | "publishedYear" | "originalPublisher" | "editionPublisher" | "editionYear" | "repo" | "startedAt" | "finishedAt" | "summary" | "highlights" | "takeaways">;
+export type BookInput = Pick<Book, "title" | "originalTitle" | "author" | "publishedYear" | "originalPublisher" | "editionPublisher" | "editionYear" | "repo" | "startedAt" | "finishedAt" | "summary" | "highlights" | "takeaways">;

@@ -15,6 +15,7 @@ describe("bookService", () => {
     expect(() => input({ finishedAt: "ayer" })).toThrow();
     expect(() => input({ publishedYear: "mil" })).toThrow();
     expect(input({ publishedYear: "1943" }).publishedYear).toBe("1943");
+    expect(input({ originalTitle: " Le Petit Prince " }).originalTitle).toBe("Le Petit Prince");
     expect(() => input({ startedAt: "2026-10-30", finishedAt: "2026-10-29" })).toThrow();
     expect(input({ startedAt: "2026-10-25", finishedAt: "2026-10-29" }).startedAt).toBe("2026-10-25");
   });

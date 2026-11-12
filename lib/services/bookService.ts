@@ -9,6 +9,7 @@ import type { Book, BookInput } from "@/lib/types";
 
 const LIMITS: Record<keyof BookInput, number> = {
   title: 300,
+  originalTitle: 300,
   author: 200,
   repo: 500,
   publishedYear: 5,
@@ -52,7 +53,7 @@ export function parseBookInput(raw: Record<string, unknown>): BookInput {
 
 function toBook(item: Record<string, unknown>): Book {
   const { pk: _pk, sk: _sk, ...rest } = item;
-  return { startedAt: "", publishedYear: "", originalPublisher: "", editionPublisher: "", editionYear: "", photos: [], ...rest } as unknown as Book;
+  return { originalTitle: "", startedAt: "", publishedYear: "", originalPublisher: "", editionPublisher: "", editionYear: "", photos: [], ...rest } as unknown as Book;
 }
 
 export async function listBooks(userId: string): Promise<Book[]> {
