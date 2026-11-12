@@ -1,8 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useFormStatus } from "react-dom";
 import { confirmPhoto, deletePhoto, requestPhotoUpload } from "../../actions";
+
+type Photo = { key: string; url: string };
 
 /** Reduce a 1600 px de lado mayor y recodifica en WebP (quita también el EXIF/GPS). */
 async function shrink(file: File): Promise<Blob> {
@@ -17,11 +20,12 @@ async function shrink(file: File): Promise<Blob> {
   return blob;
 }
 
-export default function Photos({ bookId, photos }: { bookId: string; photos: { key: string; url: string }[] }) {
+export default function Photos({ bookId, title, photos }: { bookId: string; title: string; photos: Photo[] }) {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const [open, setOpen] = useState<number | null>(null);
 
   async function upload(files: FileList) {
     setError("");
@@ -45,22 +49,22 @@ export default function Photos({ bookId, photos }: { bookId: string; photos: { k
     }
   }
 
+  // Si se quita una foto, el índice abierto puede quedar fuera de rango.
+  useEffect(() => {
+    if (open !== null && open >= photos.length) setOpen(photos.length ? photos.length - 1 : null);
+  }, [open, photos.length]);
+
   return (
     <section>
-      <h3>Fotos</h3>
+      <h3>Fotos{photos.length > 0 && <span className="count"> · {photos.length}</span>}</h3>
       {photos.length > 0 && (
         <ul className="photos">
-          {photos.map((p) => (
+          {photos.map((p, i) => (
             <li key={p.key}>
-              <a href={p.url} target="_blank" rel="noopener noreferrer">
+              <button type="button" className="thumb" onClick={() => setOpen(i)} aria-label={`Ver foto ${i + 1} de ${photos.length}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.url} alt="Foto del libro" loading="lazy" />
-              </a>
-              <form action={deletePhoto}>
-                <input type="hidden" name="id" value={bookId} />
-                <input type="hidden" name="key" value={p.key} />
-                <button type="submit" className="danger" aria-label="Quitar foto">Quitar</button>
-              </form>
+                <img src={p.url} alt="" loading="lazy" />
+              </button>
             </li>
           ))}
         </ul>
@@ -71,6 +75,115 @@ export default function Photos({ bookId, photos }: { bookId: string; photos: { k
           onChange={(e) => e.target.files?.length && upload(e.target.files)} />
       </label>
       {error && <p className="error">{error}</p>}
+      {open !== null && photos[open] && (
+        <Lightbox bookId={bookId} title={title} photos={photos} index={open} onIndex={setOpen} onClose={() => setOpen(null)} />
+      )}
     </section>
   );
+}
+
+function Lightbox({ bookId, title, photos, index, onIndex, onClose }: {
+  bookId: string; title: string; photos: Photo[]; index: number;
+  onIndex: (i: number) => void; onClose: () => void;
+}) {
+  const [confirming, setConfirming] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const touch = useRef<{ x: number; y: number } | null>(null);
+  const strip = useRef<HTMLDivElement>(null);
+  const closeBtn = useRef<HTMLButtonElement>(null);
+  const n = photos.length;
+  const photo = photos[index];
+
+  const go = useCallback((d: number) => { setConfirming(false); onIndex((index + d + n) % n); }, [index, n, onIndex]);
+
+  useEffect(() => setLoaded(false), [photo.key]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { if (confirming) setConfirming(false); else onClose(); }
+      else if (e.key === "ArrowRight" && !confirming) go(1);
+      else if (e.key === "ArrowLeft" && !confirming) go(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [go, onClose, confirming]);
+
+  // Bloquea el scroll de la página y devuelve el foco al cerrar.
+  useEffect(() => {
+    const prev = document.activeElement as HTMLElement | null;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeBtn.current?.focus();
+    return () => { document.body.style.overflow = overflow; prev?.focus(); };
+  }, []);
+
+  useEffect(() => {
+    strip.current?.querySelector<HTMLElement>(`[data-i="${index}"]`)?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+  }, [index]);
+
+  // Precarga las vecinas para que pasar de foto sea instantáneo.
+  useEffect(() => {
+    if (n < 2) return;
+    for (const d of [1, -1]) new Image().src = photos[(index + d + n) % n].url;
+  }, [index, n, photos]);
+
+  return (
+    <div className="lightbox" role="dialog" aria-modal="true" aria-label={`Fotos de ${title}`}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="lb-bar">
+        <span className="lb-count">{index + 1} / {n}</span>
+        <div className="lb-tools">
+          <a href={photo.url} target="_blank" rel="noopener noreferrer" className="lb-btn" aria-label="Abrir original">↗</a>
+          <button type="button" className="lb-btn danger" onClick={() => setConfirming(true)} aria-label="Quitar foto">🗑</button>
+          <button ref={closeBtn} type="button" className="lb-btn" onClick={onClose} aria-label="Cerrar">✕</button>
+        </div>
+      </div>
+
+      <div className="lb-stage"
+        onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+        onTouchStart={(e) => { touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
+        onTouchEnd={(e) => {
+          const t = touch.current; touch.current = null;
+          if (!t || confirming) return;
+          const dx = e.changedTouches[0].clientX - t.x, dy = e.changedTouches[0].clientY - t.y;
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
+          else if (dy > 90 && Math.abs(dy) > Math.abs(dx)) onClose();
+        }}>
+        {n > 1 && <button type="button" className="lb-nav prev" onClick={() => go(-1)} aria-label="Anterior">‹</button>}
+        {!loaded && <div className="lb-spinner" aria-hidden />}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img key={photo.key} src={photo.url} alt={`Foto ${index + 1} de ${title}`} className={loaded ? "in" : ""} onLoad={() => setLoaded(true)} />
+        {n > 1 && <button type="button" className="lb-nav next" onClick={() => go(1)} aria-label="Siguiente">›</button>}
+      </div>
+
+      {confirming && (
+        <form action={deletePhoto} className="lb-confirm" role="alertdialog" aria-label="Confirmar">
+          <input type="hidden" name="id" value={bookId} />
+          <input type="hidden" name="key" value={photo.key} />
+          <p>¿Quitar esta foto? No se puede deshacer.</p>
+          <div className="actions">
+            <button type="button" autoFocus onClick={() => setConfirming(false)}>Cancelar</button>
+            <RemoveButton />
+          </div>
+        </form>
+      )}
+
+      {n > 1 && (
+        <div className="lb-strip" ref={strip}>
+          {photos.map((p, i) => (
+            <button key={p.key} data-i={i} type="button" className={i === index ? "on" : ""}
+              onClick={() => { setConfirming(false); onIndex(i); }} aria-label={`Foto ${i + 1}`} aria-current={i === index}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={p.url} alt="" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function RemoveButton() {
+  const { pending } = useFormStatus();
+  return <button type="submit" className="btn danger-fill" disabled={pending}>{pending ? "Quitando…" : "Sí, quitar"}</button>;
 }
