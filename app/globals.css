@@ -177,3 +177,4 @@ code { font-size: 0.9em; overflow-wrap: anywhere; }
 .book-card { padding: 0; overflow: hidden; }
 .book-card .cover { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--page); }
 .card-body { display: flex; flex-direction: column; gap: 4px; padding: 16px; flex: 1; }
+.btn.secondary { background: var(--surface); color: var(--text); border-color: var(--border); font-weight: 500; }

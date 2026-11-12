@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useFormState, useFormStatus } from "react-dom";
 import { saveBook, type FormState } from "./actions";
 import type { Book } from "@/lib/types";
@@ -33,7 +34,11 @@ export default function BookForm({ book }: { book?: Book }) {
       <label>Lo más importante<textarea name="highlights" rows={5} defaultValue={book?.highlights} /></label>
       <label>Lo que me aportó<textarea name="takeaways" rows={5} defaultValue={book?.takeaways} /></label>
       {state.error && <p className="error">{state.error}</p>}
-      <div className="actions"><Submit /></div>
+      <div className="actions">
+        <Submit />
+        {/* Cancelar no guarda nada: vuelve a la ficha (o al inicio si es nuevo). */}
+        <Link href={book ? `/libro/${book.id}` : "/"} className="btn secondary">Cancelar</Link>
+      </div>
     </form>
   );
 }
