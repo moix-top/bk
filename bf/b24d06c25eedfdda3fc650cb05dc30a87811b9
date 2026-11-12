@@ -1,0 +1,23 @@
+app/globals.css
+  s_dd084bf0853d43::t_bb3f31d7574eab 77-80,112-174
+app/libro/[id]/Photos.tsx
+  s_dd084bf0853d43::t_2b2beea2cef7e1 3,5,8-9,23,28,52-56,59,62,64,66-67,78-80,84-189
+app/libro/[id]/page.tsx
+  s_dd084bf0853d43::t_0b79342b05dceb 11,22-26,28,59-93,100,102-103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bfb24d06c25eedfdda3fc650cb05dc30a87811b9",
+  "prompts": {},
+  "sessions": {
+    "s_dd084bf0853d43": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "76e2c846-cace-49a6-9afb-0f147516b239",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Raul Adamuz <radamuzc@gmail.com>"
+    }
+  }
+}
