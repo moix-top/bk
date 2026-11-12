@@ -172,3 +172,8 @@ code { font-size: 0.9em; overflow-wrap: anywhere; }
   .lb-nav { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .lightbox, .lb-stage img, .thumb img { animation: none; transition: none; } }
+
+/* Portada en las tarjetas del inicio (primera foto del libro) */
+.book-card { padding: 0; overflow: hidden; }
+.book-card .cover { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--page); }
+.card-body { display: flex; flex-direction: column; gap: 4px; padding: 16px; flex: 1; }
