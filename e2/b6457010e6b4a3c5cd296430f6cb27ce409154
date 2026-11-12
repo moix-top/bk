@@ -1,0 +1,52 @@
+lib/services/bookService.ts
+  s_dd084bf0853d43::t_de069db289e803 7,15-17,43,55,72,86,88-110
+app/libro/[id]/page.tsx
+  s_dd084bf0853d43::t_2eabea272219ac 8,42
+  s_dd084bf0853d43::t_de069db289e803 9-10,25-31,33-35
+lib/photos.ts
+  s_dd084bf0853d43::t_8feffb3a5c28ac 1-49
+tests/books.test.ts
+  s_dd084bf0853d43::t_41a3dd9318faa6 3-4,34-53
+  s_dd084bf0853d43::t_5cefb2af368cce 54
+package.json
+  s_dd084bf0853d43::t_847f9ad99321be 15,17
+lib/mcp.ts
+  s_dd084bf0853d43::t_de069db289e803 12,22-24,34,92-94,96
+app/libro/[id]/DeleteBook.tsx
+  s_dd084bf0853d43::t_139b47b6b51f4f 1-22
+app/globals.css
+  s_dd084bf0853d43::t_41a3dd9318faa6 106-110
+  s_dd084bf0853d43::t_2eabea272219ac 111-112
+scripts/setup-aws.sh
+  s_dd084bf0853d43::t_08d36f0a50db38 51-54,56,79-83,100
+app/actions.ts
+  s_dd084bf0853d43::t_de069db289e803 34-67
+README.md
+  s_dd084bf0853d43::t_c487e12d51f187 3,30-33,40
+app/libro/[id]/Photos.tsx
+  s_dd084bf0853d43::t_045068414c3301 1-76
+lib/types.ts
+  s_dd084bf0853d43::t_de069db289e803 9-14,25-26,31
+infra/dynamodb.yml
+  s_dd084bf0853d43::t_08d36f0a50db38 2,39-76,88-97
+app/BookForm.tsx
+  s_dd084bf0853d43::t_de069db289e803 22-26
+package-lock.json
+  s_dd084bf0853d43::t_5f0480351720cb 12,14,66-81,103-124,179-181,187,203-205,220-222,227,355-371,391-407
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e2b6457010e6b4a3c5cd296430f6cb27ce409154",
+  "prompts": {},
+  "sessions": {
+    "s_dd084bf0853d43": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "76e2c846-cace-49a6-9afb-0f147516b239",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Raul Adamuz <radamuzc@gmail.com>"
+    }
+  }
+}
