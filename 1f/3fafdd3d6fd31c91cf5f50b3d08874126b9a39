@@ -1,0 +1,33 @@
+app/BookForm.tsx
+  s_5d1fae10132a40::t_bc20bf142d3003 18-21
+app/globals.css
+  s_5d1fae10132a40::t_02814aaad10a6e 181-184
+app/libro/[id]/page.tsx
+  s_5d1fae10132a40::t_b9f42b511f4113 24
+app/page.tsx
+  s_5d1fae10132a40::t_adfdc1cc5023ec 7,12,14-23,34,39-45,55
+lib/mcp.ts
+  s_5d1fae10132a40::t_40d748d67ca9f7 12,19,90,93
+lib/services/bookService.ts
+  s_5d1fae10132a40::t_33753575eb351c 12,56
+lib/types.ts
+  s_5d1fae10132a40::t_273405cb303444 4-5,33
+tests/books.test.ts
+  s_5d1fae10132a40::t_045419a42595f3 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1f3fafdd3d6fd31c91cf5f50b3d08874126b9a39",
+  "prompts": {},
+  "sessions": {
+    "s_5d1fae10132a40": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "257bd4ad-ca90-4757-bb8d-c06880db1142",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Raul Adamuz <radamuzc@gmail.com>"
+    }
+  }
+}
