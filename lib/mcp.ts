@@ -9,7 +9,7 @@ import type { Book } from "@/lib/types";
 export const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 const SERVER_INFO = { name: "bk", title: "bk · libros leídos", version: "1.0.0" };
 
-const INSTRUCTIONS = `bk es el registro personal de libros leídos del usuario. Cada libro tiene: título, autor, año de publicación original, repo de git con sus apuntes, fechas de comienzo y fin de lectura, un resumen breve (de qué iba), lo más importante del libro y lo que le aportó personalmente.
+const INSTRUCTIONS = `bk es el registro personal de libros leídos del usuario. Cada libro tiene: título, autor, año y editorial de la publicación original, editorial y año de la edición leída, repo de git con sus apuntes, fechas de comienzo y fin de lectura, un resumen breve (de qué iba), lo más importante del libro y lo que le aportó personalmente.
 - Antes de añadir un libro, busca con search_books para no duplicarlo.
 - Escribe en español, con tildes, tono cercano. "takeaways" (lo que me aportó) va en primera persona: es la voz del usuario, no la tuya; si no te lo ha contado, pregúntaselo en lugar de inventarlo.
 - Si el usuario tiene un repo de apuntes del libro, úsalo como fuente para resumir.`;
@@ -19,6 +19,9 @@ const bookFields = {
   author: { type: "string", description: "Autor o autores" },
   repo: { type: "string", description: "URL del repo de git con los apuntes del libro" },
   publishedYear: { type: "string", description: "Año de la publicación original, p. ej. 1943" },
+  originalPublisher: { type: "string", description: "Editorial de la publicación original" },
+  editionPublisher: { type: "string", description: "Editorial de la edición que leyó el usuario" },
+  editionYear: { type: "string", description: "Año de la edición que leyó el usuario, p. ej. 2018" },
   startedAt: { type: "string", description: "Fecha en que lo empezó, YYYY-MM-DD" },
   finishedAt: { type: "string", description: "Fecha en que lo terminó, YYYY-MM-DD" },
   summary: { type: "string", description: "Resumen breve: de qué iba el libro" },
@@ -28,7 +31,7 @@ const bookFields = {
 
 const bookOutput = {
   type: "object",
-  properties: { id: { type: "string" }, ...bookFields, createdAt: { type: "string" }, updatedAt: { type: "string" } },
+  properties: { id: { type: "string" }, ...bookFields, photos: { type: "array", items: { type: "string" } }, createdAt: { type: "string" }, updatedAt: { type: "string" } },
 };
 
 export const TOOLS = [
@@ -86,8 +89,11 @@ const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").to
 const brief = (b: Book) => ({ id: b.id, title: b.title, author: b.author, publishedYear: b.publishedYear, startedAt: b.startedAt, finishedAt: b.finishedAt, summary: b.summary.slice(0, 280) });
 
 function asMarkdown(b: Book): string {
-  const lines = [`# ${b.title}`, [b.author, b.publishedYear && `publicado en ${b.publishedYear}`, b.startedAt && `empezado el ${b.startedAt}`, b.finishedAt && `terminado el ${b.finishedAt}`].filter(Boolean).join(" · ")];
+  const lines = [`# ${b.title}`, [b.author, b.publishedYear && `publicado en ${b.publishedYear}`, b.originalPublisher && `por ${b.originalPublisher}`, b.startedAt && `empezado el ${b.startedAt}`, b.finishedAt && `terminado el ${b.finishedAt}`].filter(Boolean).join(" · ")];
+  const edition = [b.editionPublisher, b.editionYear].filter(Boolean).join(", ");
+  if (edition) lines.push(`Edición leída: ${edition}`);
   if (b.repo) lines.push(`Repo: ${b.repo}`);
+  if (b.photos.length) lines.push(`Fotos: ${b.photos.length}`);
   if (b.summary) lines.push(`\n## De qué iba\n${b.summary}`);
   if (b.highlights) lines.push(`\n## Lo más importante\n${b.highlights}`);
   if (b.takeaways) lines.push(`\n## Lo que me aportó\n${b.takeaways}`);

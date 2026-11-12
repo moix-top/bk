@@ -1,6 +1,6 @@
 # bk · bk.moix.top
 
-Registro de los libros que he leído: **título**, **autor**, **fechas de comienzo y fin**, **repo de git** con los
+Registro de los libros que he leído: **título**, **autor**, **editorial y año** (original y de mi edición), **fechas de comienzo y fin**, **fotos**, **repo de git** con los
 apuntes (p. ej. [el-principito](https://github.com/radamuz/el-principito)), **resumen
 breve**, **lo más importante** y **lo que me aportó**.
 
@@ -27,13 +27,17 @@ Tabla `bk-data` (single-table, ver [lib/dynamo.ts](lib/dynamo.ts) e
 [infra/dynamodb.yml](infra/dynamodb.yml)). Sin credenciales de AWS se usa un almacén en
 memoria, así que `npm run dev` y `npm test` funcionan sin nada.
 
+Las fotos van al bucket privado `bk-data-photos-<cuenta>` del mismo stack (variable
+`S3_BUCKET`). El navegador las reduce a WebP y las sube directamente con un PUT
+prefirmado; se muestran con GET prefirmados. Ver [lib/photos.ts](lib/photos.ts).
+
 ## Puesta en marcha (ya hecha)
 
 ```bash
 aws cloudformation deploy --profile radamuz --template-file infra/dynamodb.yml \
   --stack-name bk-data --parameter-overrides TableName=bk-data
 ./scripts/setup-aws.sh --profile radamuz   # usuario IAM de runtime + variables
-vercel env add …                            # AWS_*, DYNAMODB_TABLE, AUTH_*
+vercel env add …                            # AWS_*, DYNAMODB_TABLE, S3_BUCKET, AUTH_*
 vercel deploy --prod
 ```
 

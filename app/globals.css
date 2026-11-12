@@ -103,3 +103,10 @@ pre { margin: 0; padding: 12px; background: var(--page); border-radius: 8px; ove
 code { font-size: 0.9em; overflow-wrap: anywhere; }
 .tokens { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
 .tokens li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+.photos { list-style: none; padding: 0; margin: 0 0 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.photos li { display: grid; gap: 6px; }
+.photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); display: block; }
+.photos button { min-height: 32px; font-size: 0.85rem; }
+.upload { display: inline-flex; cursor: pointer; }
+.confirm { flex-basis: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.confirm p { margin: 0 0 10px; }

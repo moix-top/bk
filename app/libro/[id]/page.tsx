@@ -5,7 +5,9 @@ import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/auth";
 import { getBook } from "@/lib/services/bookService";
 import Header from "../../Header";
-import { removeBook } from "../../actions";
+import DeleteBook from "./DeleteBook";
+import { photoUrl, photosEnabled } from "@/lib/photos";
+import Photos from "./Photos";
 
 export default async function BookPage({ params }: { params: { id: string } }) {
   const { userId } = await requireSession();
@@ -20,17 +22,24 @@ export default async function BookPage({ params }: { params: { id: string } }) {
         <p className="sub">
           {[b.author, b.publishedYear && `publicado en ${b.publishedYear}`, readingSpan(b.startedAt, b.finishedAt)].filter(Boolean).join(" · ")}
         </p>
+        {(b.originalPublisher || b.editionPublisher || b.editionYear) && (
+          <p className="sub">
+            {[b.originalPublisher && `Editorial original: ${b.originalPublisher}`,
+              (b.editionPublisher || b.editionYear) && `Mi edición: ${[b.editionPublisher, b.editionYear].filter(Boolean).join(", ")}`]
+              .filter(Boolean).join(" · ")}
+          </p>
+        )}
         {b.repo && <p><a href={b.repo} target="_blank" rel="noopener noreferrer" className="repo">{b.repo.replace(/^https?:\/\//, "")} ↗</a></p>}
+        {photosEnabled() && (
+          <Photos bookId={b.id} photos={await Promise.all(b.photos.map(async (key) => ({ key, url: await photoUrl(key) })))} />
+        )}
         <Section title="De qué iba" text={b.summary} />
         <Section title="Lo más importante" text={b.highlights} />
         <Section title="Lo que me aportó" text={b.takeaways} />
       </article>
       <div className="actions">
         <Link href={`/libro/${b.id}/editar`} className="btn">Editar</Link>
-        <form action={removeBook}>
-          <input type="hidden" name="id" value={b.id} />
-          <button type="submit" className="danger">Borrar</button>
-        </form>
+        <DeleteBook id={b.id} title={b.title} />
       </div>
     </main>
   );

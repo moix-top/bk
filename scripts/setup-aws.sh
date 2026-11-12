@@ -48,7 +48,12 @@ if [[ -z "$TABLE_ARN" || "$TABLE_ARN" == "None" ]]; then
   echo "error: no se encuentra el stack '$STACK_NAME'. Lanza antes el workflow 'Deploy infra (DynamoDB)'." >&2
   exit 1
 fi
+BUCKET_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
+  --query "Stacks[0].Outputs[?OutputKey=='PhotosBucketArn'].OutputValue" --output text)
+BUCKET=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
+  --query "Stacks[0].Outputs[?OutputKey=='PhotosBucket'].OutputValue" --output text)
 echo "    Tabla: $TABLE_NAME"
+echo "    Fotos: $BUCKET"
 
 if ! aws iam get-user --user-name "$USER_NAME" >/dev/null 2>&1; then
   aws iam create-user --user-name "$USER_NAME" >/dev/null
@@ -71,6 +76,11 @@ POLICY_DOC=$(cat <<JSON
       "Action": ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem",
                  "dynamodb:DeleteItem", "dynamodb:Query", "dynamodb:DescribeTable"],
       "Resource": ["$TABLE_ARN", "$TABLE_ARN/index/*"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+      "Resource": "$BUCKET_ARN/*"
     }
   ]
 }
@@ -87,6 +97,7 @@ echo " (marca Production, Preview y Development)"
 echo "──────────────────────────────────────────────────────────────"
 echo "AWS_REGION=$REGION"
 echo "DYNAMODB_TABLE=$TABLE_NAME"
+echo "S3_BUCKET=$BUCKET"
 
 if [[ "$NEW_KEY" == "true" ]]; then
   CREDS=$(aws iam create-access-key --user-name "$USER_NAME" \

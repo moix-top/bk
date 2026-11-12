@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Tabla DynamoDB de bk (registro de libros leídos, por usuario).
+Description: Tabla DynamoDB y bucket S3 de fotos de bk (registro de libros leídos, por usuario).
 
 Parameters:
   TableName:
@@ -36,6 +36,44 @@ Resources:
       SSESpecification:
         SSEEnabled: true
 
+  # Fotos de los libros. Privado: se lee y se sube solo con URLs prefirmadas
+  # que genera el servidor para la sesión del usuario.
+  BkPhotos:
+    Type: AWS::S3::Bucket
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub '${TableName}-photos-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: limpiar-versiones-antiguas
+            Status: Enabled
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 30
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 1
+      # El navegador sube directamente con PUT prefirmado.
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods: [PUT, GET]
+            AllowedOrigins: ['https://bk.moix.top', 'http://localhost:3000']
+            AllowedHeaders: ['*']
+            MaxAge: 3600
+
 Outputs:
   TableName:
     Description: Nombre de la tabla (ponlo como DYNAMODB_TABLE en Vercel).
@@ -47,3 +85,13 @@ Outputs:
     Value: !GetAtt BkTable.Arn
     Export:
       Name: !Sub '${AWS::StackName}-TableArn'
+  PhotosBucket:
+    Description: Bucket de fotos (ponlo como S3_BUCKET en Vercel).
+    Value: !Ref BkPhotos
+    Export:
+      Name: !Sub '${AWS::StackName}-PhotosBucket'
+  PhotosBucketArn:
+    Description: ARN del bucket de fotos.
+    Value: !GetAtt BkPhotos.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-PhotosBucketArn'

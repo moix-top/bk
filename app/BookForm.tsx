@@ -19,6 +19,11 @@ export default function BookForm({ book }: { book?: Book }) {
         <label>Autor<input name="author" defaultValue={book?.author} /></label>
         <label>Año de publicación<input name="publishedYear" inputMode="numeric" placeholder="1943" maxLength={5} defaultValue={book?.publishedYear} /></label>
       </div>
+      <label>Editorial original<input name="originalPublisher" placeholder="Reynal & Hitchcock" defaultValue={book?.originalPublisher} /></label>
+      <div className="two">
+        <label>Editorial de mi edición<input name="editionPublisher" placeholder="Ediciones Salamandra" defaultValue={book?.editionPublisher} /></label>
+        <label>Año de mi edición<input name="editionYear" inputMode="numeric" placeholder="2018" maxLength={4} defaultValue={book?.editionYear} /></label>
+      </div>
       <div className="two">
         <label>Empezado el<input type="date" name="startedAt" defaultValue={book?.startedAt} /></label>
         <label>Terminado el<input type="date" name="finishedAt" defaultValue={book?.finishedAt} /></label>
