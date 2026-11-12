@@ -1,0 +1,21 @@
+app/BookForm.tsx
+  s_5d1fae10132a40::t_57af295c9bc11c 3,37-41
+app/globals.css
+  s_5d1fae10132a40::t_71f85ddae1dbd8 180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8ba8e7bb14bff089aa61a012d272ca270d1b46dd",
+  "prompts": {},
+  "sessions": {
+    "s_5d1fae10132a40": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "257bd4ad-ca90-4757-bb8d-c06880db1142",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Raul Adamuz <radamuzc@gmail.com>"
+    }
+  }
+}
